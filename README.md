@@ -1,3 +1,5 @@
+欢迎加入社区: discord.com/invite/G2eXkSW2Mx
+
 # BFG
 <img width="1281" height="749" alt="image" src="https://github.com/user-attachments/assets/d5991b8c-5893-44ee-acb6-a75c8e267e4c" />
 
@@ -43,6 +45,7 @@
 //@version=6
 indicator("My First Pine Script", overlay=true)
 plot(close, color=color.blue, title="Close Price")
+```
 
 ## ✅ 添加脚本到图表
 1. 点击 Pine 编辑器右上角的 “添加到图表（Add to chart）” 按钮。
