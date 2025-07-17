@@ -1,0 +1,151 @@
+//©kiuyam
+//@version=6
+indicator('BFG MA', shorttitle = 'BFG MA V2', overlay = true)
+
+// ============ 自定义参数 =============
+string source_setting = 'Source Setting'
+series float ma_source = input.source(close, 'Price Source', tooltip = '数据源', group = source_setting)
+string type_setting = 'MA Type'
+simple string ma_type = input.string(defval = 'EMA', title = 'MA Type', options = ['SMA', 'EMA','WMA'], group = type_setting)
+string ma_setting = 'MA Setting'
+simple bool ma_show_1 = input.bool(defval = true, title = '', inline = 'MA1', display = display.data_window, group = ma_setting)
+simple int ma_length_1 = input.int(7, 'MA1', minval = 1, inline = 'MA1', group = ma_setting, display = display.data_window)
+simple bool ma_show_2 = input.bool(defval = true, title = '', inline = 'MA2', display = display.data_window, group = ma_setting)
+simple int ma_length_2 = input.int(14, 'MA2', minval = 1, inline = 'MA2', group = ma_setting, display = display.data_window)
+simple bool ma_show_3 = input.bool(defval = true, title = '', inline = 'MA3', display = display.data_window, group = ma_setting)
+simple int ma_length_3 = input.int(28, 'MA3', minval = 1, inline = 'MA3', group = ma_setting, display = display.data_window)
+simple bool ma_show_4 = input.bool(defval = true, title = '', inline = 'MA4', display = display.data_window, group = ma_setting)
+simple int ma_length_4 = input.int(55, 'MA4', minval = 1, inline = 'MA4', group = ma_setting, display = display.data_window)
+simple bool ma_show_5 = input.bool(defval = false, title = '', inline = 'MA5', display = display.data_window, group = ma_setting)
+simple int ma_length_5 = input.int(90, 'MA5', minval = 1, inline = 'MA5', group = ma_setting, display = display.data_window)
+simple bool ma_show_6 = input.bool(defval = false, title = '', inline = 'MA6', display = display.data_window, group = ma_setting)
+simple int ma_length_6 = input.int(100, 'MA6', minval = 1, inline = 'MA6', group = ma_setting, display = display.data_window)
+simple bool ma_show_7 = input.bool(defval = false, title = '', inline = 'MA7', display = display.data_window, group = ma_setting)
+simple int ma_length_7 = input.int(120, 'MA7', minval = 1, inline = 'MA7', group = ma_setting, display = display.data_window)
+simple bool ma_show_8 = input.bool(defval = false, title = '', inline = 'MA8', display = display.data_window, group = ma_setting)
+simple int ma_length_8 = input.int(200, 'MA8', minval = 1, inline = 'MA8', group = ma_setting, display = display.data_window)
+simple bool ma_show_9 = input.bool(defval = false, title = '', inline = 'MA9', display = display.data_window, group = ma_setting)
+simple int ma_length_9 = input.int(400, 'MA9', minval = 1, inline = 'MA9', group = ma_setting, display = display.data_window)
+simple bool ma_show_10 = input.bool(defval = false, title = '', inline = 'MA10', display = display.data_window, group = ma_setting)
+simple int ma_length_10 = input.int(500, 'MA10', minval = 1, inline = 'MA10', group = ma_setting, display = display.data_window)
+
+simple bool show_ma_label = input.bool(defval = true, title = 'show MA Label', inline = 'MaShow', tooltip = '在均线旁显示价格', group = ma_setting)
+
+
+// ============ 优化的彩虹色系颜色设置 =============
+simple color ma1Color = color.new(#FF0000, 0)      // 红色
+simple color ma2Color = color.new(#FF5500, 0)     // 红橙色
+simple color ma3Color = color.new(#FFAA00, 0)     // 橙色
+simple color ma4Color = color.new(#FFFF00, 0)     // 黄色
+simple color ma5Color = color.new(#AAFF00, 0)     // 黄绿色
+simple color ma6Color = color.new(#00FF00, 0)     // 绿色
+simple color ma7Color = color.new(#00FFAA, 0)     // 绿青色
+simple color ma8Color = color.new(#00AAFF, 0)     // 天蓝色
+simple color ma9Color = color.new(#0000FF, 0)     // 蓝色
+simple color ma10Color = color.new(#AA00FF, 0)    // 蓝紫色
+
+// ============ 按需计算均线 =============
+var float ma1 = na
+var float ma2 = na
+var float ma3 = na
+var float ma4 = na
+var float ma5 = na
+var float ma6 = na
+var float ma7 = na
+var float ma8 = na
+var float ma9 = na
+var float ma10 = na
+
+// 只在对应模式下计算所需均线
+if ma_type == 'SMA'
+    ma1 := ta.sma(ma_source, ma_length_1)
+    ma2 := ta.sma(ma_source, ma_length_2)
+    ma3 := ta.sma(ma_source, ma_length_3)
+    ma4 := ta.sma(ma_source, ma_length_4)
+    ma5 := ta.sma(ma_source, ma_length_5)
+    ma6 := ta.sma(ma_source, ma_length_6)
+    ma7 := ta.sma(ma_source, ma_length_7)
+    ma8 := ta.sma(ma_source, ma_length_8)
+    ma9 := ta.sma(ma_source, ma_length_9)
+    ma10 := ta.sma(ma_source, ma_length_10)
+else if ma_type == 'EMA'
+    ma1 := ta.ema(ma_source, ma_length_1)
+    ma2 := ta.ema(ma_source, ma_length_2)
+    ma3 := ta.ema(ma_source, ma_length_3)
+    ma4 := ta.ema(ma_source, ma_length_4)
+    ma5 := ta.ema(ma_source, ma_length_5)
+    ma6 := ta.ema(ma_source, ma_length_6)
+    ma7 := ta.ema(ma_source, ma_length_7)
+    ma8 := ta.ema(ma_source, ma_length_8)
+    ma9 := ta.ema(ma_source, ma_length_9)
+    ma10 := ta.ema(ma_source, ma_length_10)
+else if ma_type == 'WMA'
+    ma1 := ta.wma(ma_source, ma_length_1)
+    ma2 := ta.wma(ma_source, ma_length_2)
+    ma3 := ta.wma(ma_source, ma_length_3)
+    ma4 := ta.wma(ma_source, ma_length_4)
+    ma5 := ta.wma(ma_source, ma_length_5)
+    ma6 := ta.wma(ma_source, ma_length_6)
+    ma7 := ta.wma(ma_source, ma_length_7)
+    ma8 := ta.wma(ma_source, ma_length_8)
+    ma9 := ta.wma(ma_source, ma_length_9)
+    ma10 := ta.wma(ma_source, ma_length_10)
+
+
+// ============ 绘制均线 =============
+plot(ma_show_1 ? ma1 : na, color = color.new(ma1Color, 10), linewidth = 1, title = 'MA1')
+plot(ma_show_2 ? ma2 : na, color = color.new(ma2Color, 10), linewidth = 1, title = 'MA2')
+plot(ma_show_3 ? ma3 : na, color = color.new(ma3Color, 10), linewidth = 1, title = 'MA3')
+plot(ma_show_4 ? ma4 : na, color = color.new(ma4Color, 10), linewidth = 1, title = 'MA4')
+plot(ma_show_5 ? ma5 : na, color = color.new(ma5Color, 10), linewidth = 1, title = 'MA5')
+plot(ma_show_6 ? ma6 : na, color = color.new(ma6Color, 10), linewidth = 1, title = 'MA6')
+plot(ma_show_7 ? ma7 : na, color = color.new(ma7Color, 10), linewidth = 1, title = 'MA7')
+plot(ma_show_8 ? ma8 : na, color = color.new(ma8Color, 10), linewidth = 1, title = 'MA8')
+plot(ma_show_9 ? ma9 : na, color = color.new(ma9Color, 10), linewidth = 1, title = 'MA9')
+plot(ma_show_10 ? ma10 : na, color = color.new(ma10Color, 10), linewidth = 1, title = 'MA10')
+
+// ============ 显示均线标签 =============
+var label ma1Label = na
+var label ma2Label = na
+var label ma3Label = na
+var label ma4Label = na
+var label ma5Label = na
+var label ma6Label = na
+var label ma7Label = na
+var label ma8Label = na
+var label ma9Label = na
+var label ma10Label = na
+
+if barstate.islast and show_ma_label
+    // 删除旧标签（避免重复叠加）
+    label.delete(ma1Label)
+    label.delete(ma2Label)
+    label.delete(ma3Label)
+    label.delete(ma4Label)
+    label.delete(ma5Label)
+    label.delete(ma6Label)
+    label.delete(ma7Label)
+    label.delete(ma8Label)
+    label.delete(ma9Label)
+    label.delete(ma10Label)
+    
+    if ma_show_1
+        ma1Label := label.new(bar_index + 1, ma1, text = ma_type + str.tostring(ma_length_1) + ": " + str.tostring(ma1, format.mintick), color = color.new(color.white, 100), style = label.style_label_left, textcolor = ma1Color, size = size.normal, yloc = yloc.price)
+    if ma_show_2
+        ma2Label := label.new(bar_index + 1, ma2, text = ma_type + str.tostring(ma_length_2) + ": " + str.tostring(ma2, format.mintick), color = color.new(color.white, 100), style = label.style_label_left, textcolor = ma2Color, size = size.normal, yloc = yloc.price)
+    if ma_show_3
+        ma3Label := label.new(bar_index + 1, ma3, text = ma_type + str.tostring(ma_length_3) + ": " + str.tostring(ma3, format.mintick), color = color.new(color.white, 100), style = label.style_label_left, textcolor = ma3Color, size = size.normal, yloc = yloc.price)
+    if ma_show_4
+        ma4Label := label.new(bar_index + 1, ma4, text = ma_type + str.tostring(ma_length_4) + ": " + str.tostring(ma4, format.mintick), color = color.new(color.white, 100), style = label.style_label_left, textcolor = ma4Color, size = size.normal, yloc = yloc.price)
+    if ma_show_5
+        ma5Label := label.new(bar_index + 1, ma5, text = ma_type + str.tostring(ma_length_5) + ": " + str.tostring(ma5, format.mintick), color = color.new(color.white, 100), style = label.style_label_left, textcolor = ma5Color, size = size.normal, yloc = yloc.price)
+    if ma_show_6
+        ma6Label := label.new(bar_index + 1, ma6, text = ma_type + str.tostring(ma_length_6) + ": " + str.tostring(ma6, format.mintick), color = color.new(color.white, 100), style = label.style_label_left, textcolor = ma6Color, size = size.normal, yloc = yloc.price)
+    if ma_show_7
+        ma7Label := label.new(bar_index + 1, ma7, text = ma_type + str.tostring(ma_length_7) + ": " + str.tostring(ma7, format.mintick), color = color.new(color.white, 100), style = label.style_label_left, textcolor = ma7Color, size = size.normal, yloc = yloc.price)
+    if ma_show_8
+        ma8Label := label.new(bar_index + 1, ma8, text = ma_type + str.tostring(ma_length_8) + ": " + str.tostring(ma8, format.mintick), color = color.new(color.white, 100), style = label.style_label_left, textcolor = ma8Color, size = size.normal, yloc = yloc.price)
+    if ma_show_9
+        ma9Label := label.new(bar_index + 1, ma9, text = ma_type + str.tostring(ma_length_9) + ": " + str.tostring(ma9, format.mintick), color = color.new(color.white, 100), style = label.style_label_left, textcolor = ma9Color, size = size.normal, yloc = yloc.price)
+    if ma_show_10
+        ma10Label := label.new(bar_index + 1, ma10, text = ma_type + str.tostring(ma_length_10) + ": " + str.tostring(ma10, format.mintick), color = color.new(color.white, 100), style = label.style_label_left, textcolor = ma10Color, size = size.normal, yloc = yloc.price)
